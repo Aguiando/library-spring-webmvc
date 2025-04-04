@@ -1,9 +1,11 @@
 package br.com.bpkedu.library_spring_webmvc.controller;
 
 
+import br.com.bpkedu.library_spring_webmvc.domain.Livro;
 import br.com.bpkedu.library_spring_webmvc.domain.Usuario;
 import br.com.bpkedu.library_spring_webmvc.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,18 +37,27 @@ public class UsuarioController {
     @PostMapping("/salvar")
     public String salvarUsuario(@ModelAttribute Usuario usuario){
         usuarioService.salvar(usuario);
-        return "redirect:/usuario/listar";
+        return "redirect:/usuario/listar-usuario";
     }
 
-    @GetMapping("editar/{id:\\ d+}")
+    @GetMapping("editar/{id:\\d+}")
     public String formularioEditarUsuario(@PathVariable Long id, Model model){
         model.addAttribute("Usuario", usuarioService.buscarPorId(id));
-        return "redirect:/usuario/listar";
+        return "/usuario/editar";
     }
 
-    @GetMapping("/deletar/{id: \\d+}")
+    @PostMapping("/editar/{id}")
+    public String atualizarUsuario(@PathVariable Long id, @ModelAttribute Usuario usuario) {
+        usuario.setId(id);
+        usuarioService.salvar(usuario);
+        return "redirect:/usuario/listar-usuario";
+    }
+
+
+    @GetMapping("/deletar/{id:\\d+}")
     public String deletarUsuario(@PathVariable Long id){
         usuarioService.deletar(id);
-        return "redirect:/usuario/listar";
+        return "redirect:/usuario/listar-usuario";
     }
+
 }
